@@ -28,6 +28,8 @@ createApp({
         const toUpdateUsers = JSON.parse(localStorage.getItem('users'))
         this.users = toUpdateUsers
       }
+
+      console.log('USERS', this.users)
     },
     goToLogin () {
       window.location.href = '../index.html'
@@ -81,14 +83,16 @@ createApp({
 
           console.log('USERS', this.users)
           alert('usuario creado exitosamente')
-          
+
           localStorage.setItem('users', JSON.stringify(this.users))
           localStorage.setItem(
             'userLogin',
-            JSON.stringify({
-              username: this.username,
-              password: this.password
-            })
+            JSON.stringify([
+              {
+                username: this.username,
+                password: this.password
+              }
+            ])
           )
           this.name = ''
           this.username = ''

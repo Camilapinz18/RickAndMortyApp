@@ -6,10 +6,12 @@ const app = Vue.createApp({
       charactersList: [],
       characters: [],
       buyedCards: [],
+      cardsToShow: [],
       isLandPage: false,
       isCollecion: false,
       isPurchases: false,
-      isPayCredits: false
+      isPayCredits: false,
+      currentUser: JSON.parse(localStorage.getItem('userLogin'))
     }
   },
   methods: {
@@ -17,6 +19,7 @@ const app = Vue.createApp({
       this.syncLocalStorage()
       this.fetchData()
       this.isLandPage = true
+      console.log('CURRENT', this.currentUser[0])
     },
     syncLocalStorage () {
       if (
@@ -34,7 +37,6 @@ const app = Vue.createApp({
     },
     async fetchData () {
       let page = this.assignRandomPage()
-      console.log('Page', page)
       try {
         const response = await fetch(
           `https://rickandmortyapi.com/api/character/?page=${page}`
@@ -65,13 +67,28 @@ const app = Vue.createApp({
     },
     addToCart (char) {
       alert(char.name + char.id)
+      let date = new Date()
+      let formattedDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+      console.log('formattedDate', formattedDate)
       this.buyedCards.push({
+        user: this.currentUser[0].username,
         card: char,
-        date: new Date()
+        date: formattedDate
       })
       console.log('buyedCards', this.buyedCards)
       localStorage.setItem('buyedCards', JSON.stringify(this.buyedCards))
     },
+    assignCardsToCurrentUser () {
+      this.isLandPage = false
+      this.isPurchases = true
+      console.log('aca')
+      this.cardsToShow = this.buyedCards.filter(card => {
+        return card.user === this.currentUser[0].username
+      })
+
+      console.log('cardsToShow', this.cardsToShow)
+    },
+
     assignRandomPage () {
       let randPage = Math.round(Math.random() * 42)
       return randPage
@@ -93,10 +110,10 @@ const app = Vue.createApp({
     generatePayment () {
       alert('pago egenrado')
     },
-    logout(){
-      this.isLandPage=false
+    logout () {
+      this.isLandPage = false
       localStorage.removeItem('userLogin')
-      window.location.href = "../index.html";
+      window.location.href = '../index.html'
     }
   },
 
