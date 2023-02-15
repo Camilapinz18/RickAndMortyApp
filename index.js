@@ -5,12 +5,31 @@ const app = Vue.createApp({
       selectedPage: null,
       charactersList: [],
       characters: [],
-      buyedCards:[]
+      buyedCards: [],
+      isLandPage: false,
+      isCollecion: false,
+      isPurchases:false
     }
   },
   methods: {
     onLoadPage () {
+      this.syncLocalStorage()
       this.fetchData()
+      this.isLandPage = true
+    },
+    syncLocalStorage () {
+      if (
+        localStorage.getItem('buyedCards') === null ||
+        localStorage.getItem('buyedCards') === undefined
+      ) {
+        localStorage.setItem('buyedCards', JSON.stringify(this.buyedCards))
+      } else {
+        localStorage.setItem('buyedCards', localStorage.getItem('buyedCards'))
+        const toUpdateBuyedCards = JSON.parse(
+          localStorage.getItem('buyedCards')
+        )
+        this.buyedCards = toUpdateBuyedCards
+      }
     },
     async fetchData () {
       let page = this.assignRandomPage()
@@ -35,7 +54,7 @@ const app = Vue.createApp({
           species: char.species,
           status: char.status,
           price: this.assignRandomPrice(),
-          cardStatus:this.assignRandomCardStatus()
+          cardStatus: this.assignRandomCardStatus()
         })
       })
 
@@ -44,10 +63,12 @@ const app = Vue.createApp({
       localStorage.setItem('cards', JSON.stringify(this.charactersList))
     },
     addToCart (char) {
-      
       alert(char.name + char.id)
-      this.buyedCards.push(char)
-      console.log("buyedCards",this.buyedCards)
+      this.buyedCards.push({
+        card: char,
+        date: new Date()
+      })
+      console.log('buyedCards', this.buyedCards)
       localStorage.setItem('buyedCards', JSON.stringify(this.buyedCards))
     },
     assignRandomPage () {

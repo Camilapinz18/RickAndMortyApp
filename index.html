@@ -18,61 +18,154 @@
   <body>
     <div id="app">
       <div class="container main">
-        <!-- USER MENU -->
-        <div class="dropdown">
-          <button
-            class="btn btn-info dropdown-toggle mt-3 float-end"
-            type="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            Mi cuenta
-          </button>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Mi colección</a></li>
-            <li><a class="dropdown-item" href="#">Mis creditos</a></li>
-            <li><a class="dropdown-item" href="#">Mis compras</a></li>
-            <li><a class="dropdown-item bg-danger" href="#">Cerrar sesión</a></li>
-          </ul>
-        </div>
-        <!-- LOGO -->
-        <img class="logo-image" src="/logo.png" alt="logo" />
-        <h1 class="text-title">Tarjetas de Rick n' Morty</h1>
-        <!-- CARDS -->
-        <div class="row">
-          <div class="col-md-6" v-for="char in charactersList">
-            <div class="card card-style" style="width: 96%">
-              <div class="row no-gutters">
-                <div class="col-sm-5">
-                  <img class="card-img" :src="char.image" alt="Card" />
-                </div>
-                <div class="col-sm-7">
-                  <div class="card-body">
-                    <h3 class="card-title text">{{ char.name }}</h3>
-                    <p class="card-text text">
-                      {{ char.status }} - {{ char.species }}
-                    </p>
-                    <h5 class="card-title text">${{ char.price }}</h5>
-                    <button
-                      v-if="char.cardStatus===
+        <div v-if="isLandPage">
+          <!-- USER MENU -->
+          <div class="dropdown">
+            <button
+              class="btn btn-info dropdown-toggle mt-3 float-end"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Mi cuenta
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Mi colección</a></li>
+              <li><a class="dropdown-item" href="#">Mis creditos</a></li>
+              <li>
+                <a
+                  @click="isLandPage=false; isPurchases=true"
+                  class="dropdown-item"
+                  href="#"
+                  >Mis compras</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item bg-danger" href="#">Cerrar sesión</a>
+              </li>
+            </ul>
+          </div>
+          <!-- LOGO -->
+          <img class="logo-image" src="/logo.png" alt="logo" />
+          <h1 class="text-title">Tarjetas de Rick n' Morty</h1>
+          <!-- CARDS -->
+          <div class="row">
+            <div class="col-md-6" v-for="char in charactersList">
+              <div class="card card-style" style="width: 96%">
+                <div class="row no-gutters">
+                  <div class="col-sm-5">
+                    <img class="card-img" :src="char.image" alt="Card" />
+                  </div>
+                  <div class="col-sm-7">
+                    <div class="card-body">
+                      <h3 class="card-title text">{{ char.name }}</h3>
+                      <p class="card-text text">
+                        {{ char.status }} - {{ char.species }}
+                      </p>
+                      <h5 class="card-title text">${{ char.price }}</h5>
+                      <button
+                        v-if="char.cardStatus===
                     'inAuction'"
-                      @click="addToCart(char)"
-                      class="btn btn-info"
-                    >
-                      Entrar a subasta
-                    </button>
-                    <button
-                      v-else-if="char.cardStatus===
+                        @click="addToCart(char)"
+                        class="btn btn-info"
+                      >
+                        Entrar a subasta
+                      </button>
+                      <button
+                        v-else-if="char.cardStatus===
                     'forSale'"
-                      @click="addToCart(char)"
-                      class="btn btn-info"
-                    >
-                      Comprar
-                    </button>
+                        @click="addToCart(char)"
+                        class="btn btn-info"
+                      >
+                        Comprar
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+        <!-- MY CARDS COLLECTION -->
+        <div class="row" v-if="isPurchases">
+          <div class="dropdown">
+            <button
+              class="btn btn-info mt-3 float-end"
+              type="button"
+              @click="isLandPage=true; isPurchases=false"
+              aria-expanded="false"
+            >
+              Volver
+            </button>
+          </div>
+          <div class="image-container">
+            <img class="buy-image" src="/buy.png" alt="logo" />
+          </div>
+
+          <h1 class="text-title">Mi historial de compras</h1>
+          <h4 class="text">Tarjetas</h4>
+          <div class="container">
+            <table class="table mt-3">
+              <thead>
+                <tr class="text">
+                  <th scope="col">Card</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="char in buyedCards">
+                  <td class="image-td">
+                    <img
+                      class="card-image-list"
+                      :src="char.card.image"
+                      alt="photo"
+                    />
+                  </td>
+                  <td class="text">
+                    {{ char.card.name }}
+                  </td>
+                  <td class="text">${{ char.card.price }}</td>
+                  <td class="text">
+                    {{ char.date }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <h4 class="text mt-5">MortyCoins</h4>
+          <div class="container">
+            <table class="table mt-3">
+              <thead>
+                <tr class="text">
+                  <!-- <th scope="col">Card</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Date</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <!-- <tr v-for="char in buyedCards">
+                  <td class="image-td">
+                    <img
+                      class="card-image-list"
+                      :src="char.card.image"
+                      alt="photo"
+                    />
+                  </td>
+                  <td class="text">
+                    {{ char.card.name }}
+                  </td>
+                  <td class="text">
+                    {{ char.card.price }}
+                  </td>
+                  <td class="text">
+                    {{ char.date }}
+                  </td>
+                </tr> -->
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

@@ -8,9 +8,35 @@
     -moz-box-shadow: 1px 1px 78px 6px rgba(0, 176, 200, 0.33);
 }
 
+.card-image-list {
+    width: 100%;
+    border-radius: 50%;
+    background-color: red;
+}
+
+.image-td {
+    background-color: red;
+    width: 10%;
+}
+
 body {
     margin: 0;
     padding: 0;
+}
+
+.image-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding-top: 40px;
+}
+
+.buy-image {
+    width: 50%;
+    box-shadow: 1px 1px 78px 6px rgba(0, 176, 200, 0.33);
+    -webkit-box-shadow: 1px 1px 78px 6px rgba(0, 176, 200, 0.33);
+    -moz-box-shadow: 1px 1px 78px 6px rgba(0, 176, 200, 0.33);
 }
 
 .main {
