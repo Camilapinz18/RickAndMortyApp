@@ -16,14 +16,7 @@ createApp({
     }
   },
   methods: {
-    async getData () {
-      const response = await fetch('https://rickandmortyapi.com/api/location/3')
-        .then(resp => resp.json())
-        .then(data => data)
-      console.log(response)
-    },
-
-    login () {
+     login () {
       if (this.password !== '' && this.username !== '') {
         const user = this.users.filter(
           user =>
@@ -42,7 +35,10 @@ createApp({
         this.alert = true
       }
     },
-
+    goToSignup(){
+      console.log("go")
+      window.location.href = '/Register/register.html';
+    },
     closeAlert () {
       this.alert = false
     }

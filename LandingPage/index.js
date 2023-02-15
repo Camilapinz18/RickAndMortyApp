@@ -95,6 +95,7 @@ const app = Vue.createApp({
     },
     logout(){
       this.isLandPage=false
+      localStorage.removeItem('userLogin')
       window.location.href = "../index.html";
     }
   },

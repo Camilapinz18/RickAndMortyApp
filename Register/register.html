@@ -28,7 +28,7 @@
           style="background-color: #3c3e44"
         >
           <div class="row">
-            <h1>Inicio de sesión</h1>
+            <h1>Registro de usuario</h1>
           </div>
           <div class="row">
             <div
@@ -36,6 +36,12 @@
             >
               <label for="" class="rounded p-2">Username</label>
               <input type="" class="rounded p-2" v-model="username" />
+              <label for="" class="rounded p-2">Nombre</label>
+              <input type="" class="rounded p-2" v-model="name" />
+              <label for="" class="rounded p-2">Correo</label>
+              <input type="" class="rounded p-2" v-model="email" />
+              <label for="" class="rounded p-2">Telefono</label>
+              <input type="" class="rounded p-2" v-model="phone" />
               <label for="" class="rounded p-2">Contraseña</label>
               <input type="password" class="rounded p-2" v-model="password" />
 
@@ -75,15 +81,16 @@
                 </div>
               </div>
 
-              <button class="btn btn-primary m-4 p-2" @click="login">
-                Ingresar
+              <button class="btn btn-primary m-4 p-2" @click="signup">
+                Registrarse
               </button>
-              <a href="#" @click.prevent="goToSignup">Registrate</a>
+              <span>Ya tienes una cuenta?</span>
+              <a @click.prevent="goToLogin" href="">Inicia sesión!</a>
             </div>
           </div>
         </div>
       </section>
     </div>
   </body>
-  <script src="main.js"></script>
+  <script src="register.js"></script>
 </html>
