@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/vue@3.0.2"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="./index.css" />
+    <title>Rick n' Morty App</title>
+  </head>
+
+  <body>
+    <div id="app">
+      <div class="container main">
+        <!-- USER MENU -->
+        <div class="dropdown">
+          <button
+            class="btn btn-info dropdown-toggle mt-3 float-end"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Mi cuenta
+          </button>
+          <ul class="dropdown-menu bg-info">
+            <li><a class="dropdown-item" href="#">Mi colección</a></li>
+            <li><a class="dropdown-item" href="#">Mis creditos</a></li>
+            <li><a class="dropdown-item" href="#">Mis compras</a></li>
+          </ul>
+        </div>
+        <!-- LOGO -->
+        <img class="logo-image" src="/logo.png" alt="logo" />
+        <h1 class="text-title">Tarjetas de Rick n' Morty</h1>
+        <!-- CARDS -->
+        <div class="row">
+          <div class="col-md-6" v-for="char in charactersList">
+            <div class="card card-style" style="width: 96%">
+              <div class="row no-gutters">
+                <div class="col-sm-5">
+                  <img class="card-img" :src="char.image" alt="Card" />
+                </div>
+                <div class="col-sm-7">
+                  <div class="card-body">
+                    <h3 class="card-title text">{{ char.name }}</h3>
+                    <p class="card-text text">
+                      {{ char.status }} - {{ char.species }}
+                    </p>
+                    <h5 class="card-title text">$50</h5>
+                    <a href="#" class="btn btn-info">Adquirir</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+      crossorigin="anonymous"
+    ></script>
+
+    <script src="./index.js"></script>
+  </body>
+</html>

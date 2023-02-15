@@ -1,0 +1,35 @@
+.card-style {
+    background-color: #3C3E44;
+    margin: 10px;
+    padding: 0;
+    width: 100%;
+    box-shadow: 1px 1px 78px 6px rgba(0, 176, 200, 0.33);
+    -webkit-box-shadow: 1px 1px 78px 6px rgba(0, 176, 200, 0.33);
+    -moz-box-shadow: 1px 1px 78px 6px rgba(0, 176, 200, 0.33);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.main {
+    background-color: #272B33;
+}
+
+.text {
+    color: white;
+}
+
+.logo-image {
+    width: 100%;
+}
+
+.text-title {
+    margin: 40px;
+    font-size: 70px;
+    font-weight: bolder;
+    color: #00B0C8;
+    text-align: center;
+
+}
