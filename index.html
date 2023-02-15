@@ -51,8 +51,23 @@
                     <p class="card-text text">
                       {{ char.status }} - {{ char.species }}
                     </p>
-                    <h5 class="card-title text">$50</h5>
-                    <button @click="addToCart(char)" class="btn btn-info">Adquirir</button>
+                    <h5 class="card-title text">${{ char.price }}</h5>
+                    <button
+                      v-if="char.cardStatus===
+                    'inAuction'"
+                      @click="addToCart(char)"
+                      class="btn btn-info"
+                    >
+                      Entrar a subasta
+                    </button>
+                    <button
+                      v-else-if="char.cardStatus===
+                    'forSale'"
+                      @click="addToCart(char)"
+                      class="btn btn-info"
+                    >
+                      Comprar
+                    </button>
                   </div>
                 </div>
               </div>
