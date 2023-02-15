@@ -8,7 +8,8 @@ const app = Vue.createApp({
       buyedCards: [],
       isLandPage: false,
       isCollecion: false,
-      isPurchases:false
+      isPurchases: false,
+      isPayCredits: false
     }
   },
   methods: {
@@ -88,6 +89,9 @@ const app = Vue.createApp({
       const cardStatus = ['inAuction', 'forSale']
       let randStatus = cardStatus[Math.floor(Math.random() * cardStatus.length)]
       return randStatus
+    },
+    generatePayment () {
+      alert('pago egenrado')
     }
   },
 

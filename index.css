@@ -59,3 +59,27 @@ body {
     text-align: center;
 
 }
+
+.modal-absolute {
+    position: absolute;
+}
+
+.pay-icon {
+    width: 13%;
+}
+
+
+
+.icons-container {
+    /* background-color: rebeccapurple; */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding-right: 15px;
+    width: 100%;
+}
+
+.efecty{
+    border-radius: 50%;
+}
