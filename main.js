@@ -56,7 +56,7 @@ createApp({
     },
     goToSignup () {
       console.log('go')
-      window.location.href = '/Register/register.html'
+      window.location.href = './Register/register.html'
     },
     closeAlert () {
       this.alert = false
