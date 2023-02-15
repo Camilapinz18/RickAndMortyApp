@@ -4,7 +4,8 @@ const app = Vue.createApp({
       pages: null,
       selectedPage: null,
       charactersList: [],
-      characters: []
+      characters: [],
+      buyedCards:[]
     }
   },
   methods: {
@@ -43,8 +44,11 @@ const app = Vue.createApp({
       localStorage.setItem('cards', JSON.stringify(this.charactersList))
     },
     addToCart (char) {
-      console.log(char)
+      
       alert(char.name + char.id)
+      this.buyedCards.push(char)
+      console.log("buyedCards",this.buyedCards)
+      localStorage.setItem('buyedCards', JSON.stringify(this.buyedCards))
     },
     assignRandomPage () {
       let randPage = Math.round(Math.random() * 42)
