@@ -35,13 +35,13 @@
               class="col flex d-flex flex-column justify-content-center align-items-center text-center m-2"
             >
               <label for="" class="rounded p-2">Username</label>
-              <input type="" class="rounded p-2" v-model="username" />
+              <input type="text" class="rounded p-2" v-model="username" />
               <label for="" class="rounded p-2">Nombre</label>
-              <input type="" class="rounded p-2" v-model="name" />
+              <input type="text" class="rounded p-2" v-model="name" />
               <label for="" class="rounded p-2">Correo</label>
-              <input type="" class="rounded p-2" v-model="email" />
+              <input type="email" class="rounded p-2" v-model="email" />
               <label for="" class="rounded p-2">Telefono</label>
-              <input type="" class="rounded p-2" v-model="phone" />
+              <input type="number" class="rounded p-2" v-model="phone" />
               <label for="" class="rounded p-2">Contraseña</label>
               <input type="password" class="rounded p-2" v-model="password" />
 
@@ -93,4 +93,5 @@
     </div>
   </body>
   <script src="register.js"></script>
+   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </html>
