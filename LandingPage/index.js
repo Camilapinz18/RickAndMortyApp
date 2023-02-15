@@ -92,6 +92,10 @@ const app = Vue.createApp({
     },
     generatePayment () {
       alert('pago egenrado')
+    },
+    logout(){
+      this.isLandPage=false
+      window.location.href = "../index.html";
     }
   },
 
