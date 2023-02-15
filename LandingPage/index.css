@@ -1,4 +1,4 @@
-.bg-all{
+.bg-all {
     background-color: #272B33;
     padding-bottom: 50px;
 }
@@ -13,8 +13,22 @@
     -moz-box-shadow: 1px 1px 78px 6px rgba(0, 176, 200, 0.33);
 }
 
+.card-image {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.card-container {
+    width: 300px;
+    height: 300px;
+    overflow: hidden;
+    background-color: rebeccapurple;
+}
+
 .card-image-list {
     width: 100%;
+
     border-radius: 50%;
     background-color: red;
 }
@@ -29,9 +43,9 @@ body {
     padding: 0;
 }
 
-td{
+td {
     background-color: red;
- 
+
 }
 
 .image-container {
@@ -90,6 +104,6 @@ td{
     width: 100%;
 }
 
-.efecty{
+.efecty {
     border-radius: 50%;
 }
