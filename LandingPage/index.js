@@ -11,7 +11,8 @@ const app = Vue.createApp({
       isCollecion: false,
       isPurchases: false,
       isPayCredits: false,
-      currentUser: JSON.parse(localStorage.getItem('userLogin'))
+      currentUser: JSON.parse(localStorage.getItem('userLogin')),
+      launchAlert: false
     }
   },
   methods: {
@@ -86,7 +87,24 @@ const app = Vue.createApp({
         return card.user === this.currentUser[0].username
       })
 
-      console.log('cardsToShow', this.cardsToShow)
+      console.log('cardsToShow', this.cardsToShow.length)
+
+      if (this.cardsToShow.length === 0) {
+        Swal.fire({
+          title: `Parece que aún no cuentas con ningún NFT!`,
+          text: '¿Que tal si adquieres algunos MortyCoins?',
+          width: 600,
+          padding: '3em',
+          color: 'white',
+          background: '#272B33 url("./images/back.png")',
+
+          backdrop: `
+            rgba(0,176,200,0.4)
+            left top
+            no-repeat
+          `
+        })
+      }
     },
 
     assignRandomPage () {
