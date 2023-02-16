@@ -1,5 +1,5 @@
 const app = Vue.createApp({
-  data () {
+  data() {
     return {
       pages: null,
       selectedPage: null,
@@ -12,17 +12,32 @@ const app = Vue.createApp({
       isPurchases: false,
       isPayCredits: false,
       currentUser: JSON.parse(localStorage.getItem('userLogin')),
-      launchAlert: false
+      launchAlert: false,
+      packets: [
+        { name: 'Basico', img: 'images/morty.jpeg', amount: 100, price: 10000 },
+        { name: 'Medio', img: 'images/summer.jpeg', amount: 200, price: 18000 },
+        { name: 'Alto', img: 'images/rick.jpeg', amount: 300, price: 25000 }
+      ],
+      valueAuction: '',
+      message: '',
+      alert: false,
+      noCoins: false,
+      buyedCard: false,
+      card: '',
+      allCards: [],
+      myCards: [],
+      norepeatedCards:[],
+      isMyCards:false
     }
   },
   methods: {
-    onLoadPage () {
+    onLoadPage() {
       this.syncLocalStorage()
       this.fetchData()
       this.isLandPage = true
       console.log('CURRENT', this.currentUser[0])
     },
-    syncLocalStorage () {
+    syncLocalStorage() {
       if (
         localStorage.getItem('buyedCards') === null ||
         localStorage.getItem('buyedCards') === undefined
@@ -36,7 +51,7 @@ const app = Vue.createApp({
         this.buyedCards = toUpdateBuyedCards
       }
     },
-    async fetchData () {
+    async fetchData() {
       let page = this.assignRandomPage()
       try {
         const response = await fetch(
@@ -53,10 +68,13 @@ const app = Vue.createApp({
 
       this.characters.map(char => {
         this.charactersList.push({
+          id: char.id,
           name: char.name,
           image: char.image,
           species: char.species,
           status: char.status,
+          amount: 1,
+          purchasePrice: 0,
           price: this.assignRandomPrice(),
           cardStatus: this.assignRandomCardStatus()
         })
@@ -66,7 +84,7 @@ const app = Vue.createApp({
 
       localStorage.setItem('cards', JSON.stringify(this.charactersList))
     },
-    addToCart (char) {
+    addToCart(char) {
       alert(char.name + char.id)
       let date = new Date()
       let formattedDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
@@ -79,7 +97,7 @@ const app = Vue.createApp({
       console.log('buyedCards', this.buyedCards)
       localStorage.setItem('buyedCards', JSON.stringify(this.buyedCards))
     },
-    assignCardsToCurrentUser () {
+    assignCardsToCurrentUser() {
       this.isLandPage = false
       this.isPurchases = true
       console.log('aca')
@@ -107,11 +125,11 @@ const app = Vue.createApp({
       }
     },
 
-    assignRandomPage () {
+    assignRandomPage() {
       let randPage = Math.round(Math.random() * 42)
       return randPage
     },
-    assignRandomPrice () {
+    assignRandomPrice() {
       let minPrice = 20
       let maxPrice = 500
       let randPrice = Math.floor(
@@ -120,23 +138,122 @@ const app = Vue.createApp({
 
       return randPrice
     },
-    assignRandomCardStatus () {
+    assignRandomCardStatus() {
       const cardStatus = ['inAuction', 'forSale']
       let randStatus = cardStatus[Math.floor(Math.random() * cardStatus.length)]
       return randStatus
     },
-    generatePayment () {
+    generatePayment() {
       alert('pago egenrado')
     },
-    logout () {
+    logout() {
       this.isLandPage = false
       localStorage.removeItem('userLogin')
       window.location.href = '../index.html'
-    }
+    },
+
+    viewMyCards(){
+      this.isLandPage = false
+      this.isMyCards = true
+    },
+
+    auction(card) {
+      this.closeAlert();
+      this.card = card;
+      if (this.valueAuction !== '') {
+        const numbersAuction = Math.floor(Math.random() * (2))
+        if (numbersAuction == 1) {
+          this.card.price = this.changePrice(this.card.price);
+        }
+        if (this.currentUser[0].coins >= this.valueAuction && this.valueAuction >= this.card.price) {
+          this.currentUser[0].coins = this.currentUser[0].coins - this.valueAuction;
+          this.card.purchasePrice = this.valueAuction;
+          if (this.allCards?.length > 0) {
+            this.allCards.push([{ username: this.currentUser[0].username }, { card: this.card }])
+          } else {
+            this.allCards = [[{ username: this.currentUser[0].username }, { card: this.card }]];
+          }
+          localStorage.setItem('allCards', JSON.stringify(this.allCards))
+          this.message = 'Compra exitosa!!!';
+          this.myBuyedCards();
+          this.addToCart(this.card)
+          this.valueAuction = '';
+          this.buyedCard = true;
+          this.alert = false;
+          console.log('compara exitosa')
+          
+          
+        } else {
+          this.message = 'Coins insuficientes';
+          console.log('Coins insuficientes')
+          this.noCoins = true;
+          this.alert = true;
+        }
+      } else {
+        console.log('Debe ingresar una cantidad');
+        this.message = 'Debe ingresar una cantidad';
+        this.alert = true;
+        this.noCoins = false;
+      }
+    },
+
+    changePrice(price) {
+      const newPrice = price + (Math.round(price * (Math.floor(Math.random() * (32 - 1) + 1) / 100)))
+      return newPrice;
+    },
+
+    myBuyedCards() {
+      this.allCards = JSON.parse(localStorage.getItem("allCards"));
+      console.log(this.currentUser[0].username);
+      this.myCards = this.allCards?.filter(myCards => myCards[0].username == this.currentUser[0].username)
+     // this.myCards = this.allCards?.filter(myCards =>console.log(myCards[0].username))
+
+      let res = [];
+      this.myCards?.forEach(element => {
+        res.push(element[1].card)
+      });
+      this.myCards = res;
+      const resultado = []
+      this.myCards?.forEach(el => (resultado[el.id] = resultado[el.id] + 1 || 1))
+
+      this.norepeatedCards = []
+      const aux = [];
+      this.myCards?.forEach(card => {
+        if (aux.includes(card.id)) {
+          aux.push(card.id)
+        } else {
+          aux.push(card.id)
+          this.norepeatedCards.push(card);
+        }
+      })
+
+      this.myCards?.forEach(card => {
+        if (resultado[card.id]) {
+          card.amount = resultado[card.id];
+        }
+      })
+
+      this.myCards?.forEach(card => {
+        if (card.amount > 1) {
+          card.repeated = true;
+        }
+      })
+
+     console.log(this.myCards); 
+
+    },
+
+    closeAlert() {
+      this.alert = false;
+      this.noCoins = false;
+      this.buyedCard = false;
+    },
   },
 
-  created () {
+  created() {
     this.onLoadPage()
+    this.myBuyedCards()
+
   }
 })
 
