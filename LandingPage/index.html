@@ -31,7 +31,7 @@
               <a @click="assignCardsToCurrentUser" class="dropdown-item" href="#">Mis compras</a>
             </li>
             <li>
-              <a @click="logout" class="dropdown-item bg-danger" href="#">Cerrar sesión</a>
+              <a @click="logout" class="dropdown-item bg-danger" href="#" @click="myPayment">Cerrar sesión</a>
             </li>
           </ul>
         </div>
@@ -102,7 +102,7 @@
                 <td class="text">
                   {{ char.card.name }}
                 </td>
-                <td class="text">${{ char.card.purchasePrice }}</td>
+                <td class="text">${{ char.purshasedPrice }}</td>
                 <td class="text">
                   {{ char.date }}
                 </td>
@@ -115,23 +115,16 @@
           <table class="table mt-3">
             <thead>
               <tr class="text">
-                <!-- <th scope="col">Card</th>
-                  <th scope="col">Name</th>
+                <th scope="col">Paquete</th>
                   <th scope="col">Price</th>
-                  <th scope="col">Date</th> -->
+                  <th scope="col">Date</th>
               </tr>
             </thead>
             <tbody>
-              <!-- <tr v-for="char in buyedCards">
-                  <td class="image-td">
-                    <img
-                      class="card-image-list"
-                      :src="char.card.image"
-                      alt="photo"
-                    />
-                  </td>
+              <tr v-for="char in myPayments">
+                  
                   <td class="text">
-                    {{ char.card.name }}
+                    {{ char.user }}
                   </td>
                   <td class="text">
                     {{ char.card.price }}
@@ -139,7 +132,7 @@
                   <td class="text">
                     {{ char.date }}
                   </td>
-                </tr> -->
+                </tr>
             </tbody>
           </table>
         </div>

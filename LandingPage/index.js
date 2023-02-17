@@ -19,7 +19,7 @@ const app = Vue.createApp({
         { name: 'Bueno', img: 'images/beth.jpeg', amount: 300, price: 25000 },
         { name: 'Alto', img: 'images/rick.jpeg', amount: 500, price: 35000 },
       ],
-      packet:[],
+      packet: [],
       valueAuction: '',
       message: '',
       alert: false,
@@ -30,6 +30,8 @@ const app = Vue.createApp({
       myCards: [],
       norepeatedCards: [],
       isMyCards: false,
+      myPayments: [],
+      allPayments: [],
 
     }
   },
@@ -43,15 +45,24 @@ const app = Vue.createApp({
     syncLocalStorage() {
       if (
         localStorage.getItem('buyedCards') === null ||
-        localStorage.getItem('buyedCards') === undefined
+        localStorage.getItem('buyedCards') === undefined ||
+        localStorage.getItem('allPayments') === null ||
+        localStorage.getItem('allPayments') === undefined 
       ) {
-        localStorage.setItem('buyedCards', JSON.stringify(this.buyedCards))
+        localStorage.setItem('buyedCards', JSON.stringify(this.buyedCards));
+        localStorage.setItem('allPayments', JSON.stringify(this.allPayments));
       } else {
         localStorage.setItem('buyedCards', localStorage.getItem('buyedCards'))
         const toUpdateBuyedCards = JSON.parse(
           localStorage.getItem('buyedCards')
-        )
-        this.buyedCards = toUpdateBuyedCards
+        );
+        this.buyedCards = toUpdateBuyedCards;
+
+        localStorage.setItem('allPayments', localStorage.getItem('allPayments'))
+        const toUpdateAllPayments = JSON.parse(
+          localStorage.getItem('allPayments')
+        );
+        this.allPayments = toUpdateAllPayments;
       }
     },
     async fetchData() {
@@ -77,7 +88,6 @@ const app = Vue.createApp({
           species: char.species,
           status: char.status,
           amount: 1,
-          purchasePrice: 0,
           price: this.assignRandomPrice(),
           cardStatus: this.assignRandomCardStatus()
         })
@@ -89,22 +99,27 @@ const app = Vue.createApp({
     },
     addToCart(char) {
       //alert(char.name + char.id)
+
+      let finalPrice = 0
+
       if (this.currentUser[0].coins >= char.price) {
         if (this.valueAuction != '') {
-          char.purchasePrice = this.valueAuction;
+          finalPrice = Number(this.valueAuction);
           this.currentUser[0].coins = this.currentUser[0].coins - this.valueAuction;
         } else {
-          char.purchasePrice = char.price;
+          finalPrice = char.price;
           this.currentUser[0].coins = this.currentUser[0].coins - char.price;
         }
-        console.log('coins',this.currentUser[0].coins);
+        console.log('coins', this.currentUser[0].coins);
+        console.log('FINAL', finalPrice);
         let date = new Date()
         let formattedDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
         console.log('formattedDate', formattedDate)
         this.buyedCards.push({
           user: this.currentUser[0].username,
           card: char,
-          date: formattedDate
+          date: formattedDate,
+          purshasedPrice: finalPrice
         })
         console.log('buyedCards', this.buyedCards)
         localStorage.setItem('buyedCards', JSON.stringify(this.buyedCards))
@@ -162,17 +177,32 @@ const app = Vue.createApp({
       return randStatus
     },
     generatePayment() {
-      // alert('pago egenrado')
-      
+      //this.allPayments = JSON.parse(localStorage.getItem('allPayments'));
+      console.log('dsd',this.allPayments);
       console.log(this.packet);
+
+      let date = new Date();
+      let formattedDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+      
+      this.allPayments.push({
+        user: this.currentUser[0].username,
+        card: this.packet,
+        date: formattedDate,
+      })
+      localStorage.setItem('allPayments', JSON.stringify(this.allPayments));
+
+      this.myPayment();
+      this.packet = '';
+
     },
+
     logout() {
       this.isLandPage = false
       localStorage.removeItem('userLogin')
       window.location.href = '../index.html'
     },
 
-    payPacket(packet){
+    payPacket(packet) {
       this.packet = packet;
     },
 
@@ -190,7 +220,7 @@ const app = Vue.createApp({
           card.price = this.changePrice(card.price);
         }
         if (this.currentUser[0].coins >= this.valueAuction && this.valueAuction >= card.price) {
-          
+
           this.addToCart(card);
           this.valueAuction = '';
           this.message = 'Compra exitosa!!!';
@@ -218,9 +248,9 @@ const app = Vue.createApp({
     },
 
     myBuyedCards() {
+      //se filtran todas la tarjetas asociadas al actual usuario
       this.allCards = JSON.parse(localStorage.getItem('buyedCards'));
-      console.log(this.currentUser[0].username);
-      this.myCards = this.allCards?.filter(myCards => myCards.user == this.currentUser[0].username)
+      this.myCards = this.allCards?.filter(myCards => myCards.user == this.currentUser[0].username);
 
       //contar tarjetas repetidas
       let res = [];
@@ -255,6 +285,12 @@ const app = Vue.createApp({
 
     },
 
+    myPayment(){
+        //se filtran todas los pagos asociados al actual usuario
+        this.allPayments = JSON.parse(localStorage.getItem('allPayments'));
+        this.myPayments = this.allPayments?.filter(myPayments => myPayments.user == this.currentUser[0].username);
+    },
+
     closeAlert() {
       this.alert = false;
       this.noCoins = false;
@@ -265,7 +301,7 @@ const app = Vue.createApp({
   created() {
     this.onLoadPage()
     this.myBuyedCards()
-
+    //this.myPayment()
   }
 })
 
