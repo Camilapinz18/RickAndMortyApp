@@ -116,6 +116,7 @@
             <thead>
               <tr class="text">
                 <th scope="col">Paquete</th>
+                <th scope="col">Coins</th>
                   <th scope="col">Price</th>
                   <th scope="col">Date</th>
               </tr>
@@ -124,7 +125,12 @@
               <tr v-for="char in myPayments">
                   
                   <td class="text">
+                    <img class="card-image-list" style="width: 3rem;" :src="char.card.img" alt="photo" />
+
                     {{ char.card.name }}
+                  </td>
+                  <td class="text">
+                    {{ char.card.amount }}
                   </td>
                   <td class="text">
                     {{ char.card.price }}
