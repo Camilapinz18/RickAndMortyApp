@@ -9,11 +9,19 @@ createApp({
       users: [
         {
           username: 'a',
-          password: 'a'
+          password: 'a',
+          coins:20000
         },
         {
           username: 'b',
-          password: 'b'
+          password: 'b',
+          coins:0
+        }
+        ,
+        {
+          username: 'c',
+          password: 'c',
+          coins:15000
         }
       ],
       userLogin: [],
