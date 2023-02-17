@@ -17,6 +17,12 @@ createApp({
           password: 'b',
           coins:0
         }
+        ,
+        {
+          username: 'c',
+          password: 'c',
+          coins:15000
+        }
       ],
       userLogin: [],
       alert: false

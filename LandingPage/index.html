@@ -63,8 +63,6 @@
                     'forSale'" @click="addToCart(char)" class="btn btn-info">
                       Comprar
                     </button>
-                    <!-- <button data-bs-toggle="modal" data-bs-target="#auctionModal" class="btn btn-info"
-                        @click="auction(char)"> auctionModal</button> -->
                   </div>
                 </div>
               </div>
@@ -269,9 +267,6 @@
       </div>
 
       <!-- BUY COIN PACKS -->
-      <!-- <button> <a data-bs-toggle="modal" data-bs-target="#coinsModal" class="dropdown-item" href="#">ver
-          coins</a></button> -->
-
       <div class="modal fade" id="coinsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
           <div class="modal-content " style="background-color: #3C3E44;">
@@ -285,7 +280,7 @@
 
               <div class="container-fluid">
                 <div class="row justify-content-around">
-                  <div class="col-lg-4 col-md-6 col-sm-8 rounded text-center mb-2 " v-for="pk of packets">
+                  <div class="col-lg-3 col-md-6 col-sm-8 rounded text-center mb-2 " v-for="pk of packets">
                     <div class="card w-100 h-100">
                       <img v-bind:src="pk.img" alt="" class="card-img-top">
                       <div class="card-body d-flex flex-column">
@@ -295,7 +290,7 @@
                         </h5>
                         <h5 class="card-title mt-auto" style="font-weight: bold;"><button
                             class="btn btn-primary mt-auto"><a data-bs-toggle="modal" data-bs-target="#exampleModal"
-                              class="dropdown-item" href="#">{{pk.price}}</a></button></h5>
+                              class="dropdown-item" href="#" @click="payPacket(pk)">{{pk.price}}</a></button></h5>
                       </div>
                     </div>
                   </div>
@@ -307,7 +302,6 @@
         </div>
 
       </div>
-
 
       <!--  auctionModal-->
       <div class="modal fade" id="auctionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -413,9 +407,12 @@
             Volver
           </button>
         </div>
-        <h1 class="text-title">Mi historial de compras</h1>
-        <div class="container">
-          <div class="col-md-6" v-for="myCard in norepeatedCards">
+        <div class="image-container">
+          <img class="buy-image" src="images/buy.png" alt="logo" />
+        </div>
+        <h1 class="text-title">Mis Tarjetas</h1>
+        <h5 class="text-title" v-if="norepeatedCards == ''">Que esperas ve y compra tus tarjetas</h5>
+        <div class="col-md-6" v-for="myCard in norepeatedCards">
           <div class="card card-style" style="width: 96%">
             <div class="row no-gutters">
               <div class="col-sm-5">
@@ -434,8 +431,8 @@
             </div>
           </div>
         </div>
-        </div>
-        
+
+
 
       </div>
 

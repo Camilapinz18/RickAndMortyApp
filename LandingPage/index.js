@@ -16,8 +16,10 @@ const app = Vue.createApp({
       packets: [
         { name: 'Basico', img: 'images/morty.jpeg', amount: 100, price: 10000 },
         { name: 'Medio', img: 'images/summer.jpeg', amount: 200, price: 18000 },
-        { name: 'Alto', img: 'images/rick.jpeg', amount: 300, price: 25000 }
+        { name: 'Bueno', img: 'images/beth.jpeg', amount: 300, price: 25000 },
+        { name: 'Alto', img: 'images/rick.jpeg', amount: 500, price: 35000 },
       ],
+      packet:[],
       valueAuction: '',
       message: '',
       alert: false,
@@ -26,8 +28,9 @@ const app = Vue.createApp({
       card: '',
       allCards: [],
       myCards: [],
-      norepeatedCards:[],
-      isMyCards:false
+      norepeatedCards: [],
+      isMyCards: false,
+
     }
   },
   methods: {
@@ -85,17 +88,32 @@ const app = Vue.createApp({
       localStorage.setItem('cards', JSON.stringify(this.charactersList))
     },
     addToCart(char) {
-      alert(char.name + char.id)
-      let date = new Date()
-      let formattedDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
-      console.log('formattedDate', formattedDate)
-      this.buyedCards.push({
-        user: this.currentUser[0].username,
-        card: char,
-        date: formattedDate
-      })
-      console.log('buyedCards', this.buyedCards)
-      localStorage.setItem('buyedCards', JSON.stringify(this.buyedCards))
+      //alert(char.name + char.id)
+      if (this.currentUser[0].coins >= char.price) {
+        if (this.valueAuction != '') {
+          char.purchasePrice = this.valueAuction;
+          this.currentUser[0].coins = this.currentUser[0].coins - this.valueAuction;
+        } else {
+          char.purchasePrice = char.price;
+          this.currentUser[0].coins = this.currentUser[0].coins - char.price;
+        }
+        console.log('coins',this.currentUser[0].coins);
+        let date = new Date()
+        let formattedDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+        console.log('formattedDate', formattedDate)
+        this.buyedCards.push({
+          user: this.currentUser[0].username,
+          card: char,
+          date: formattedDate
+        })
+        console.log('buyedCards', this.buyedCards)
+        localStorage.setItem('buyedCards', JSON.stringify(this.buyedCards))
+        this.message = 'Compra exitosa!!!';
+        this.myBuyedCards();
+      } else {
+        console.log('coins insuficientes');
+      }
+
     },
     assignCardsToCurrentUser() {
       this.isLandPage = false
@@ -144,7 +162,9 @@ const app = Vue.createApp({
       return randStatus
     },
     generatePayment() {
-      alert('pago egenrado')
+      // alert('pago egenrado')
+      
+      console.log(this.packet);
     },
     logout() {
       this.isLandPage = false
@@ -152,7 +172,11 @@ const app = Vue.createApp({
       window.location.href = '../index.html'
     },
 
-    viewMyCards(){
+    payPacket(packet){
+      this.packet = packet;
+    },
+
+    viewMyCards() {
       this.isLandPage = false
       this.isMyCards = true
     },
@@ -163,26 +187,17 @@ const app = Vue.createApp({
       if (this.valueAuction !== '') {
         const numbersAuction = Math.floor(Math.random() * (2))
         if (numbersAuction == 1) {
-          this.card.price = this.changePrice(this.card.price);
+          card.price = this.changePrice(card.price);
         }
-        if (this.currentUser[0].coins >= this.valueAuction && this.valueAuction >= this.card.price) {
-          this.currentUser[0].coins = this.currentUser[0].coins - this.valueAuction;
-          this.card.purchasePrice = this.valueAuction;
-          if (this.allCards?.length > 0) {
-            this.allCards.push([{ username: this.currentUser[0].username }, { card: this.card }])
-          } else {
-            this.allCards = [[{ username: this.currentUser[0].username }, { card: this.card }]];
-          }
-          localStorage.setItem('allCards', JSON.stringify(this.allCards))
-          this.message = 'Compra exitosa!!!';
-          this.myBuyedCards();
-          this.addToCart(this.card)
+        if (this.currentUser[0].coins >= this.valueAuction && this.valueAuction >= card.price) {
+          
+          this.addToCart(card);
           this.valueAuction = '';
+          this.message = 'Compra exitosa!!!';
           this.buyedCard = true;
           this.alert = false;
           console.log('compara exitosa')
-          
-          
+
         } else {
           this.message = 'Coins insuficientes';
           console.log('Coins insuficientes')
@@ -203,19 +218,20 @@ const app = Vue.createApp({
     },
 
     myBuyedCards() {
-      this.allCards = JSON.parse(localStorage.getItem("allCards"));
+      this.allCards = JSON.parse(localStorage.getItem('buyedCards'));
       console.log(this.currentUser[0].username);
-      this.myCards = this.allCards?.filter(myCards => myCards[0].username == this.currentUser[0].username)
-     // this.myCards = this.allCards?.filter(myCards =>console.log(myCards[0].username))
+      this.myCards = this.allCards?.filter(myCards => myCards.user == this.currentUser[0].username)
 
+      //contar tarjetas repetidas
       let res = [];
       this.myCards?.forEach(element => {
-        res.push(element[1].card)
+        res.push(element.card)
       });
       this.myCards = res;
       const resultado = []
-      this.myCards?.forEach(el => (resultado[el.id] = resultado[el.id] + 1 || 1))
+      this.myCards?.forEach(card => (resultado[card.id] = resultado[card.id] + 1 || 1))
 
+      //formar array para visualizar
       this.norepeatedCards = []
       const aux = [];
       this.myCards?.forEach(card => {
@@ -227,19 +243,15 @@ const app = Vue.createApp({
         }
       })
 
+      //Si son repetidas indicar la cantidad y asosiarlo a la propiedad amount
       this.myCards?.forEach(card => {
         if (resultado[card.id]) {
           card.amount = resultado[card.id];
         }
       })
 
-      this.myCards?.forEach(card => {
-        if (card.amount > 1) {
-          card.repeated = true;
-        }
-      })
-
-     console.log(this.myCards); 
+      console.log(this.norepeatedCards);
+      console.log(this.myCards);
 
     },
 
