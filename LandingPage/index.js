@@ -177,10 +177,7 @@ const app = Vue.createApp({
       return randStatus
     },
     generatePayment() {
-      //this.allPayments = JSON.parse(localStorage.getItem('allPayments'));
-      console.log('dsd',this.allPayments);
-      console.log(this.packet);
-
+      
       let date = new Date();
       let formattedDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
       
@@ -189,10 +186,10 @@ const app = Vue.createApp({
         card: this.packet,
         date: formattedDate,
       })
+      this.currentUser[0].coins = this.currentUser[0].coins + this.packet.amount;
       localStorage.setItem('allPayments', JSON.stringify(this.allPayments));
 
       this.myPayment();
-      this.packet = '';
 
     },
 
@@ -301,7 +298,7 @@ const app = Vue.createApp({
   created() {
     this.onLoadPage()
     this.myBuyedCards()
-    //this.myPayment()
+    this.myPayment()
   }
 })
 
