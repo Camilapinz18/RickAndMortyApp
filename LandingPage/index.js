@@ -1,5 +1,5 @@
 const app = Vue.createApp({
-  data() {
+  data () {
     return {
       pages: null,
       selectedPage: null,
@@ -17,7 +17,7 @@ const app = Vue.createApp({
         { name: 'Basico', img: 'images/morty.jpeg', amount: 100, price: 10000 },
         { name: 'Medio', img: 'images/summer.jpeg', amount: 200, price: 18000 },
         { name: 'Bueno', img: 'images/beth.jpeg', amount: 300, price: 25000 },
-        { name: 'Alto', img: 'images/rick.jpeg', amount: 500, price: 35000 },
+        { name: 'Alto', img: 'images/rick.jpeg', amount: 500, price: 35000 }
       ],
       packet: [],
       valueAuction: '',
@@ -31,41 +31,41 @@ const app = Vue.createApp({
       norepeatedCards: [],
       isMyCards: false,
       myPayments: [],
-      allPayments: [],
-
+      allPayments: []
     }
   },
   methods: {
-    onLoadPage() {
+    onLoadPage () {
       this.syncLocalStorage()
       this.fetchData()
       this.isLandPage = true
       console.log('CURRENT', this.currentUser[0])
     },
-    syncLocalStorage() {
+    syncLocalStorage () {
       if (
         localStorage.getItem('buyedCards') === null ||
         localStorage.getItem('buyedCards') === undefined ||
         localStorage.getItem('allPayments') === null ||
-        localStorage.getItem('allPayments') === undefined 
+        localStorage.getItem('allPayments') === undefined
       ) {
-        localStorage.setItem('buyedCards', JSON.stringify(this.buyedCards));
-        localStorage.setItem('allPayments', JSON.stringify(this.allPayments));
+        localStorage.setItem('buyedCards', JSON.stringify(this.buyedCards))
+        localStorage.setItem('allPayments', JSON.stringify(this.allPayments))
       } else {
         localStorage.setItem('buyedCards', localStorage.getItem('buyedCards'))
         const toUpdateBuyedCards = JSON.parse(
           localStorage.getItem('buyedCards')
-        );
-        this.buyedCards = toUpdateBuyedCards;
+        )
+        this.buyedCards = toUpdateBuyedCards
 
         localStorage.setItem('allPayments', localStorage.getItem('allPayments'))
         const toUpdateAllPayments = JSON.parse(
           localStorage.getItem('allPayments')
-        );
-        this.allPayments = toUpdateAllPayments;
+        )
+        this.allPayments = toUpdateAllPayments
       }
     },
-    async fetchData() {
+    showPaymentsWindow () {},
+    async fetchData () {
       let page = this.assignRandomPage()
       try {
         const response = await fetch(
@@ -97,21 +97,22 @@ const app = Vue.createApp({
 
       localStorage.setItem('cards', JSON.stringify(this.charactersList))
     },
-    addToCart(char) {
+    addToCart (char) {
       //alert(char.name + char.id)
 
       let finalPrice = 0
 
       if (this.currentUser[0].coins >= char.price) {
         if (this.valueAuction != '') {
-          finalPrice = Number(this.valueAuction);
-          this.currentUser[0].coins = this.currentUser[0].coins - this.valueAuction;
+          finalPrice = Number(this.valueAuction)
+          this.currentUser[0].coins =
+            this.currentUser[0].coins - this.valueAuction
         } else {
-          finalPrice = char.price;
-          this.currentUser[0].coins = this.currentUser[0].coins - char.price;
+          finalPrice = char.price
+          this.currentUser[0].coins = this.currentUser[0].coins - char.price
         }
-        console.log('coins', this.currentUser[0].coins);
-        console.log('FINAL', finalPrice);
+        console.log('coins', this.currentUser[0].coins)
+        console.log('FINAL', finalPrice)
         let date = new Date()
         let formattedDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
         console.log('formattedDate', formattedDate)
@@ -123,14 +124,40 @@ const app = Vue.createApp({
         })
         console.log('buyedCards', this.buyedCards)
         localStorage.setItem('buyedCards', JSON.stringify(this.buyedCards))
-        this.message = 'Compra exitosa!!!';
-        this.myBuyedCards();
-      } else {
-        console.log('coins insuficientes');
-      }
+        this.message = 'Compra exitosa!!!'
+        Swal.fire({
+          title: `Has comprado el NFT de ${char.name} exitosamente!`,
+          text: '¿Que tal si sigues adquiriendo mas tarjetas?',
+          width: 600,
+          padding: '3em',
+          color: 'white',
+          background: '#272B33',
 
+          backdrop: `
+            rgba(0,176,200,0.4)
+            left top
+            no-repeat
+          `
+        })
+        this.myBuyedCards()
+      } else {
+        Swal.fire({
+          title: `Parece que aún no cuentas con MortyCoins`,
+          text: '¿Que tal si adquieres algunas? Dirígete a "Mi Cuenta" y luego da click a "Comprar créditos"',
+          width: 600,
+          padding: '3em',
+          color: 'white',
+          background: '#272B33 url("./images/back.png")',
+
+          backdrop: `
+            rgba(0,176,200,0.4)
+            left top
+            no-repeat
+          `
+        })
+      }
     },
-    assignCardsToCurrentUser() {
+    assignCardsToCurrentUser () {
       this.isLandPage = false
       this.isPurchases = true
       console.log('aca')
@@ -158,11 +185,11 @@ const app = Vue.createApp({
       }
     },
 
-    assignRandomPage() {
+    assignRandomPage () {
       let randPage = Math.round(Math.random() * 42)
       return randPage
     },
-    assignRandomPrice() {
+    assignRandomPrice () {
       let minPrice = 20
       let maxPrice = 500
       let randPrice = Math.floor(
@@ -171,131 +198,169 @@ const app = Vue.createApp({
 
       return randPrice
     },
-    assignRandomCardStatus() {
+    assignRandomCardStatus () {
       const cardStatus = ['inAuction', 'forSale']
       let randStatus = cardStatus[Math.floor(Math.random() * cardStatus.length)]
       return randStatus
     },
-    generatePayment() {
-      
-      let date = new Date();
-      let formattedDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
-      
+    generatePayment () {
+      let date = new Date()
+      let formattedDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+
       this.allPayments.push({
         user: this.currentUser[0].username,
         card: this.packet,
-        date: formattedDate,
+        date: formattedDate
       })
-      this.currentUser[0].coins = this.currentUser[0].coins + this.packet.amount;
-      localStorage.setItem('allPayments', JSON.stringify(this.allPayments));
 
-      this.myPayment();
+     
+     
+      this.currentUser[0].coins = this.currentUser[0].coins + this.packet.amount
+      console.log('currentUser', this.currentUser[0])
+      localStorage.setItem('allPayments', JSON.stringify(this.allPayments))
+      Swal.fire({
+        title: `Has comprado MortyCoins exitosamente!`,
+        text: '¿Que tal si adquieres algunos NFTs?',
+        width: 600,
+        padding: '3em',
+        color: 'white',
+        background: '#272B33',
 
+        backdrop: `
+          rgba(0,176,200,0.4)
+          left top
+          no-repeat
+        `
+      })
+      this.isPurchases=false
+      this.myPayment()
     },
 
-    logout() {
+    logout () {
       this.isLandPage = false
       localStorage.removeItem('userLogin')
       window.location.href = '../index.html'
     },
 
-    payPacket(packet) {
-      this.packet = packet;
+    payPacket (packet) {
+      this.packet = packet
     },
 
-    viewMyCards() {
+    viewMyCards () {
       this.isLandPage = false
       this.isMyCards = true
     },
 
-    auction(card) {
-      this.closeAlert();
-      this.card = card;
+    auction (card) {
+      this.closeAlert()
+      this.card = card
       if (this.valueAuction !== '') {
-        const numbersAuction = Math.floor(Math.random() * (2))
+        const numbersAuction = Math.floor(Math.random() * 2)
         if (numbersAuction == 1) {
-          card.price = this.changePrice(card.price);
+          card.price = this.changePrice(card.price)
         }
-        if (this.currentUser[0].coins >= this.valueAuction && this.valueAuction >= card.price) {
-
-          this.addToCart(card);
-          this.valueAuction = '';
-          this.message = 'Compra exitosa!!!';
-          this.buyedCard = true;
-          this.alert = false;
+        if (
+          this.currentUser[0].coins >= this.valueAuction &&
+          this.valueAuction >= card.price
+        ) {
+          this.addToCart(card)
+          this.valueAuction = ''
+          this.message = 'Compra exitosa!!!'
+          this.buyedCard = true
+          this.alert = false
           console.log('compara exitosa')
-
         } else {
-          this.message = 'Coins insuficientes';
+          this.message = 'Coins insuficientes'
           console.log('Coins insuficientes')
-          this.noCoins = true;
-          this.alert = true;
+          this.noCoins = true
+          this.alert = true
+          Swal.fire({
+            title: `Parece que aún no cuentas MortyCoins`,
+            text: '¿Que tal si adquieres algunos?',
+            width: 600,
+            padding: '3em',
+            color: 'white',
+            background: '#272B33 url("./images/back.png")',
+  
+            backdrop: `
+              rgba(0,176,200,0.4)
+              left top
+              no-repeat
+            `
+          })
         }
       } else {
-        console.log('Debe ingresar una cantidad');
-        this.message = 'Debe ingresar una cantidad';
-        this.alert = true;
-        this.noCoins = false;
+        console.log('Debe ingresar una cantidad')
+        this.message = 'Debe ingresar una cantidad'
+        this.alert = true
+        this.noCoins = false
       }
     },
 
-    changePrice(price) {
-      const newPrice = price + (Math.round(price * (Math.floor(Math.random() * (32 - 1) + 1) / 100)))
-      return newPrice;
+    changePrice (price) {
+      const newPrice =
+        price +
+        Math.round(price * (Math.floor(Math.random() * (32 - 1) + 1) / 100))
+      return newPrice
     },
 
-    myBuyedCards() {
+    myBuyedCards () {
       //se filtran todas la tarjetas asociadas al actual usuario
-      this.allCards = JSON.parse(localStorage.getItem('buyedCards'));
-      this.myCards = this.allCards?.filter(myCards => myCards.user == this.currentUser[0].username);
+      this.allCards = JSON.parse(localStorage.getItem('buyedCards'))
+      this.myCards = this.allCards?.filter(
+        myCards => myCards.user == this.currentUser[0].username
+      )
 
       //contar tarjetas repetidas
-      let res = [];
+      let res = []
       this.myCards?.forEach(element => {
         res.push(element.card)
-      });
-      this.myCards = res;
+      })
+      this.myCards = res
       const resultado = []
-      this.myCards?.forEach(card => (resultado[card.id] = resultado[card.id] + 1 || 1))
+      this.myCards?.forEach(
+        card => (resultado[card.id] = resultado[card.id] + 1 || 1)
+      )
 
       //formar array para visualizar
       this.norepeatedCards = []
-      const aux = [];
+      const aux = []
       this.myCards?.forEach(card => {
         if (aux.includes(card.id)) {
           aux.push(card.id)
         } else {
           aux.push(card.id)
-          this.norepeatedCards.push(card);
+          this.norepeatedCards.push(card)
         }
       })
 
       //Si son repetidas indicar la cantidad y asosiarlo a la propiedad amount
       this.myCards?.forEach(card => {
         if (resultado[card.id]) {
-          card.amount = resultado[card.id];
+          card.amount = resultado[card.id]
         }
       })
 
-      console.log(this.norepeatedCards);
-      console.log(this.myCards);
-
+      console.log(this.norepeatedCards)
+      console.log(this.myCards)
     },
 
-    myPayment(){
-        //se filtran todas los pagos asociados al actual usuario
-        this.allPayments = JSON.parse(localStorage.getItem('allPayments'));
-        this.myPayments = this.allPayments?.filter(myPayments => myPayments.user == this.currentUser[0].username);
+    myPayment () {
+      //se filtran todas los pagos asociados al actual usuario
+      this.allPayments = JSON.parse(localStorage.getItem('allPayments'))
+      this.myPayments = this.allPayments?.filter(
+        myPayments => myPayments.user == this.currentUser[0].username
+      )
     },
 
-    closeAlert() {
-      this.alert = false;
-      this.noCoins = false;
-      this.buyedCard = false;
-    },
+    closeAlert () {
+      this.alert = false
+      this.noCoins = false
+      this.buyedCard = false
+    }
   },
 
-  created() {
+  created () {
     this.onLoadPage()
     this.myBuyedCards()
     this.myPayment()
