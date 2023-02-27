@@ -31,7 +31,8 @@ const app = Vue.createApp({
       norepeatedCards: [],
       isMyCards: false,
       myPayments: [],
-      allPayments: []
+      allPayments: [],
+      users: []
     }
   },
   methods: {
@@ -46,7 +47,7 @@ const app = Vue.createApp({
         localStorage.getItem('buyedCards') === null ||
         localStorage.getItem('buyedCards') === undefined ||
         localStorage.getItem('allPayments') === null ||
-        localStorage.getItem('allPayments') === undefined
+        localStorage.getItem('allPayments') === undefined 
       ) {
         localStorage.setItem('buyedCards', JSON.stringify(this.buyedCards))
         localStorage.setItem('allPayments', JSON.stringify(this.allPayments))
@@ -55,14 +56,18 @@ const app = Vue.createApp({
         const toUpdateBuyedCards = JSON.parse(
           localStorage.getItem('buyedCards')
         )
-        this.buyedCards = toUpdateBuyedCards
+        this.buyedCards = toUpdateBuyedCards;
 
         localStorage.setItem('allPayments', localStorage.getItem('allPayments'))
         const toUpdateAllPayments = JSON.parse(
           localStorage.getItem('allPayments')
         )
-        this.allPayments = toUpdateAllPayments
+        this.allPayments = toUpdateAllPayments;
       }
+      const toUpdateUsers = JSON.parse(
+        localStorage.getItem('users')
+      )
+      this.users = toUpdateUsers;
     },
     showPaymentsWindow() { },
     async fetchData() {
@@ -98,7 +103,6 @@ const app = Vue.createApp({
       localStorage.setItem('cards', JSON.stringify(this.charactersList))
     },
     addToCart(char) {
-      //alert(char.name + char.id)
 
       let finalPrice = 0
 
@@ -128,6 +132,15 @@ const app = Vue.createApp({
         console.log('buyedCards', this.buyedCards)
         localStorage.setItem('buyedCards', JSON.stringify(this.buyedCards))
         this.message = 'Compra exitosa!!!'
+
+        this.users.forEach(user => {
+          if (user.password == this.currentUser[0].password) {
+            user.coins = this.currentUser[0].coins;
+          }
+        })
+        localStorage.setItem('users', JSON.stringify(this.users))
+        this.users = JSON.parse(localStorage.getItem('users'))
+
         Swal.fire({
           title: `Has comprado el NFT de ${char.name} exitosamente!`,
           text: '¿Que tal si sigues adquiriendo mas tarjetas?',
@@ -216,13 +229,21 @@ const app = Vue.createApp({
         date: formattedDate
       })
 
+      // asignar MortyCoins al usario
       this.currentUser[0].coins = this.currentUser[0].coins + this.packet.amount
       console.log('currentUser', this.currentUser[0])
-
       localStorage.setItem('userLogin', JSON.stringify(this.currentUser))
       this.currentUser = JSON.parse(localStorage.getItem('userLogin'))
       console.log(this.currentUser[0]);
       localStorage.setItem('allPayments', JSON.stringify(this.allPayments))
+      this.users.forEach(user => {
+        if (user.password == this.currentUser[0].password) {
+          user.coins = this.currentUser[0].coins;
+        }
+      })
+      localStorage.setItem('users', JSON.stringify(this.users))
+      this.users = JSON.parse(localStorage.getItem('users'))
+
       Swal.fire({
         title: `Has comprado MortyCoins exitosamente!`,
         text: '¿Que tal si adquieres algunos NFTs?',
@@ -300,7 +321,7 @@ const app = Vue.createApp({
         this.alert = true
         this.noCoins = false
       }
-      this.valueAuction ='';
+      this.valueAuction = '';
     },
 
     changePrice(price) {

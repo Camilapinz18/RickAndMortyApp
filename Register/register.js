@@ -153,7 +153,8 @@ createApp({
               name: this.name,
               email: this.email,
               phone: this.phone,
-              password: this.password
+              password: this.password,
+              coins:0
             })
 
             console.log('USERS', this.users)
@@ -169,7 +170,8 @@ createApp({
               JSON.stringify([
                 {
                   username: this.username,
-                  password: this.password
+                  password: this.password,
+                  coins: 0
                 }
               ])
             )

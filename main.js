@@ -1,7 +1,7 @@
 const { createApp } = Vue
 
 createApp({
-  data () {
+  data() {
     return {
       username: '',
       password: '',
@@ -10,18 +10,18 @@ createApp({
         {
           username: 'a',
           password: 'a',
-          coins:20000
+          coins: 0
         },
         {
           username: 'b',
           password: 'b',
-          coins:0
+          coins: 0
         }
         ,
         {
           username: 'c',
           password: 'c',
-          coins:15000
+          coins: 0
         }
       ],
       userLogin: [],
@@ -29,7 +29,7 @@ createApp({
     }
   },
   methods: {
-    syncLocalStorage () {
+    syncLocalStorage() {
       if (
         localStorage.getItem('users') === null ||
         localStorage.getItem('users') === undefined
@@ -43,7 +43,7 @@ createApp({
 
       console.log('USERS', this.users)
     },
-    login () {
+    login() {
       if (this.password !== '' && this.username !== '') {
         const user = this.users.filter(
           user =>
@@ -62,18 +62,18 @@ createApp({
         this.alert = true
       }
     },
-    goToSignup () {
+    goToSignup() {
       console.log('go')
       window.location.href = './Register/register.html'
     },
-    closeAlert () {
+    closeAlert() {
       this.alert = false
     }
   },
-  mounted () {
+  mounted() {
     this.syncLocalStorage()
     this.userLogin = JSON.parse(localStorage.getItem('userLogin'))
     localStorage.setItem('users', JSON.stringify(this.users))
   },
-  created () {}
+  created() { }
 }).mount('#root')
