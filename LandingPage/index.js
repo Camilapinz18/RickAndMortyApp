@@ -158,8 +158,8 @@ const app = Vue.createApp({
         this.myBuyedCards()
       } else {
         Swal.fire({
-          title: `Parece que aún no cuentas con MortyCoins`,
-          text: '¿Que tal si adquieres algunas? Dirígete a "Mi Cuenta" y luego da click a "Comprar créditos"',
+          title: `Parece que no cuentas con suficientes MortyCoins`,
+          text: '¿Que tal si adquieres más? Dirígete a "Mi Cuenta" y luego da click a "Comprar créditos"',
           width: 600,
           padding: '3em',
           color: 'white',
@@ -304,8 +304,8 @@ const app = Vue.createApp({
           this.noCoins = true
           this.alert = true
           Swal.fire({
-            title: `Parece que aún no cuentas MortyCoins`,
-            text: '¿Que tal si adquieres algunos?',
+            title: `Parece que no cuentas con suficientes MortyCoins`,
+            text: '¿Que tal si adquieres algunos más?',
             width: 600,
             padding: '3em',
             color: 'white',

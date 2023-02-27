@@ -66,7 +66,9 @@
           <!-- LOGO -->
           <img class="logo-image" src="images/logo.png" alt="logo" />
           <h1 class="text-title">NFT's de Rick n' Morty</h1>
-
+          <div class="container">
+            <h1 class="text-light text-center">MortyCoins disponibles: <span class="badge bg-info mb-3" >$ {{currentUser[0].coins}}</span></h1>
+          </div>
           <!-- CARDS -->
           <div class="row">
             <div class="col-md-6" v-for="char in charactersList">
@@ -124,6 +126,10 @@
           </div>
 
           <h1 class="text-title">Mi historial de compras</h1>
+          
+          <div class="container">
+            <h1 class="text-light text-center">MortyCoins disponibles: <span class="badge bg-info mb-3" >$ {{currentUser[0].coins}}</span></h1>
+          </div>
           <h4 class="text">NFTs</h4>
           <div class="container">
             <table class="table mt-3">
