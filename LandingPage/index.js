@@ -220,6 +220,7 @@ const app = Vue.createApp({
       return randStatus
     },
     generatePayment() {
+      
       let date = new Date()
       let formattedDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
 
@@ -260,6 +261,8 @@ const app = Vue.createApp({
       })
       this.isPurchases = false
       this.myPayment()
+
+       
     },
 
     logout() {
