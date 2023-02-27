@@ -1,131 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/vue@3.0.2"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="./index.css" />
+    <title>Rick n' Morty App</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://unpkg.com/vue@3.0.2"></script>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous" />
-  <link rel="stylesheet" href="./index.css" />
-  <title>Rick n' Morty App</title>
-</head>
+  <body>
+    <div class="bg-all" id="app">
+      <div class="container main">
+        <div v-if="isLandPage">
+          <!-- USER MENU -->
+          <div class="dropdown">
+            <button
+              class="btn btn-info dropdown-toggle mt-3 float-end"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Mi cuenta
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a class="dropdown-item" href="#" @click="viewMyCards"
+                  >Mi colección</a
+                >
+              </li>
+              <li>
+                <a
+                  data-bs-toggle="modal"
+                  data-bs-target="#coinsModal"
+                  class="dropdown-item"
+                  href="#"
+                  >Comprar MortyCoins</a
+                >
+              </li>
+              <li>
+                <a
+                  @click="assignCardsToCurrentUser"
+                  class="dropdown-item"
+                  href="#"
+                  >Mis compras</a
+                >
+              </li>
+              <li>
+                <a
+                  @click="logout"
+                  class="dropdown-item bg-danger"
+                  href="#"
+                  @click="myPayment"
+                  >Cerrar sesión</a
+                >
+              </li>
+            </ul>
+          </div>
+          <!-- LOGO -->
+          <img class="logo-image" src="images/logo.png" alt="logo" />
+          <h1 class="text-title">NFT's de Rick n' Morty</h1>
 
-<body>
-  <div class="bg-all" id="app">
-    <div class="container main">
-      <div v-if="isLandPage">
-        <!-- USER MENU -->
-        <div class="dropdown">
-          <button class="btn btn-info dropdown-toggle mt-3 float-end" type="button" data-bs-toggle="dropdown"
-            aria-expanded="false">
-            Mi cuenta
-          </button>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#" @click="viewMyCards">Mi colección</a></li>
-            <li>
-              <a data-bs-toggle="modal" data-bs-target="#coinsModal" class="dropdown-item" href="#">Comprar MortyCoins</a>
-            </li>
-            <li>
-              <a @click="assignCardsToCurrentUser" class="dropdown-item" href="#">Mis compras</a>
-            </li>
-            <li>
-              <a @click="logout" class="dropdown-item bg-danger" href="#" @click="myPayment">Cerrar sesión</a>
-            </li>
-          </ul>
-        </div>
-        <!-- LOGO -->
-        <img class="logo-image" src="images/logo.png" alt="logo" />
-        <h1 class="text-title">NFT's de Rick n' Morty</h1>
-
-        <!-- CARDS -->
-        <div class="row">
-          <div class="col-md-6" v-for="char in charactersList">
-            <div class="card card-style" style="width: 96%">
-              <div class="row no-gutters">
-                <div class="col-sm-5">
-                  <img class="card-img" :src="char.image" alt="Card" />
-                </div>
-                <div class="col-sm-7">
-                  <div class="card-body">
-                    <h3 class="card-title text">{{ char.name }}</h3>
-                    <p class="card-text text">
-                      {{ char.status }} - {{ char.species }}
-                    </p>
-                    <h5 class="card-title text">${{ char.price }}</h5>
-                    <button v-if="char.cardStatus===
-                    'inAuction'" data-bs-toggle="modal" data-bs-target="#auctionModal" class="btn btn-info"
-                      @click="auction(char)">
-                      Entrar a subasta
-                    </button>
-                    <button v-else-if="char.cardStatus===
-                    'forSale'" @click="addToCart(char)" class="btn btn-info">
-                      Comprar
-                    </button>
+          <!-- CARDS -->
+          <div class="row">
+            <div class="col-md-6" v-for="char in charactersList">
+              <div class="card card-style" style="width: 96%">
+                <div class="row no-gutters">
+                  <div class="col-sm-5">
+                    <img class="card-img" :src="char.image" alt="Card" />
+                  </div>
+                  <div class="col-sm-7">
+                    <div class="card-body">
+                      <h3 class="card-title text">{{ char.name }}</h3>
+                      <p class="card-text text">
+                        {{ char.status }} - {{ char.species }}
+                      </p>
+                      <h5 class="card-title text">${{ char.price }}</h5>
+                      <button
+                        v-if="char.cardStatus===
+                    'inAuction'"
+                        data-bs-toggle="modal"
+                        data-bs-target="#auctionModal"
+                        class="btn btn-info"
+                        @click="auction(char)"
+                      >
+                        Entrar a subasta
+                      </button>
+                      <button
+                        v-else-if="char.cardStatus===
+                    'forSale'"
+                        @click="addToCart(char)"
+                        class="btn btn-info"
+                      >
+                        Comprar
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <!-- MY CARDS COLLECTION -->
-      <div class="row" v-if="isPurchases">
-        <div class="dropdown">
-          <button class="btn btn-info mt-3 float-end" type="button" @click="isLandPage=true; isPurchases=false"
-            aria-expanded="false">
-            Volver
-          </button>
-        </div>
-        <div class="image-container">
-          <img class="buy-image" src="images/buy.png" alt="logo" />
-        </div>
+        <!-- MY CARDS COLLECTION -->
+        <div class="row" v-if="isPurchases">
+          <div class="dropdown">
+            <button
+              class="btn btn-info mt-3 float-end"
+              type="button"
+              @click="isLandPage=true; isPurchases=false"
+              aria-expanded="false"
+            >
+              Volver
+            </button>
+          </div>
+          <div class="image-container">
+            <img class="buy-image" src="images/buy.png" alt="logo" />
+          </div>
 
-        <h1 class="text-title">Mi historial de compras</h1>
-        <h4 class="text">NFTs</h4>
-        <div class="container">
-          <table class="table mt-3">
-            <thead>
-              <tr class="text">
-                <th scope="col">Card</th>
-                <th scope="col">Name</th>
-                <th scope="col">Price</th>
-                <th scope="col">Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="char in cardsToShow">
-                <td class="image-td">
-                  <img class="card-image-list" :src="char.card.image" alt="photo" />
-                </td>
-                <td class="text">
-                  {{ char.card.name }}
-                </td>
-                <td class="text">${{ char.purshasedPrice }}</td>
-                <td class="text">
-                  {{ char.date }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <h4 class="text mt-5">MortyCoins</h4>
-        <div class="container">
-          <table class="table mt-3">
-            <thead>
-              <tr class="text">
-                <th scope="col">Paquete</th>
-                <th scope="col">Coins</th>
+          <h1 class="text-title">Mi historial de compras</h1>
+          <h4 class="text">NFTs</h4>
+          <div class="container">
+            <table class="table mt-3">
+              <thead>
+                <tr class="text">
+                  <th scope="col">Card</th>
+                  <th scope="col">Name</th>
                   <th scope="col">Price</th>
                   <th scope="col">Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="char in myPayments">
-                  
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="char in cardsToShow">
+                  <td class="image-td">
+                    <img
+                      class="card-image-list"
+                      :src="char.card.image"
+                      alt="photo"
+                    />
+                  </td>
                   <td class="text">
-                    <img class="card-image-list" style="width: 3rem;" :src="char.card.img" alt="photo" />
+                    {{ char.card.name }}
+                  </td>
+                  <td class="text">${{ char.purshasedPrice }}</td>
+                  <td class="text">
+                    {{ char.date }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <h4 class="text mt-5">MortyCoins</h4>
+          <div class="container">
+            <table class="table mt-3">
+              <thead>
+                <tr class="text">
+                  <th scope="col">Paquete</th>
+                  <th scope="col">Coins</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="char in myPayments">
+                  <td class="text">
+                    <img
+                      class="card-image-list"
+                      style="width: 3rem"
+                      :src="char.card.img"
+                      alt="photo"
+                    />
 
                     {{ char.card.name }}
                   </td>
@@ -139,311 +188,577 @@
                     {{ char.date }}
                   </td>
                 </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <!-- BUY CREDITS -->
-      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">
-                Pagar MortyCoins!
-              </h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <div class="accordion" id="accordionExample">
-                <div class="accordion-item">
-                  <h2 class="accordion-header" id="headingOne">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                      Tarjeta de crédito
-                      <div class="icons-container">
-                        <img src="images/visa.png" alt="Tarjeta de crédito" class="mr-2 pay-icon" />
-                        <img src="images/mastercard.png" alt="Tarjeta de crédito" class="mr-2 pay-icon" />
-                        <img src="images/amex.png" alt="Tarjeta de crédito" class="mr-2 pay-icon" />
-                      </div>
-                    </button>
-                  </h2>
-                  <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                      <input type="password" id="cardNumber" class="form-control m-2"
-                        aria-describedby="passwordHelpBlock" placeholder="Número de tarjeta" />
-                      <input type="password" id="titularName" class="form-control m-2"
-                        aria-describedby="passwordHelpBlock" placeholder="Nombre del titular" />
-                      <input type="password" id="expirationDate" class="form-control m-2"
-                        aria-describedby="passwordHelpBlock" placeholder="Fecha de vencimiento (MM/AA)" />
-                      <input type="password" id="securityCode" class="form-control m-2"
-                        aria-describedby="passwordHelpBlock" placeholder="Código de seguridad" />
-
-                      <button @click="generatePayment" type="button m-2" class="btn btn-info">
-                        Realizar pago
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div class="accordion-item">
-                  <h2 class="accordion-header" id="headingThree">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                      PayPal
-                      <div class="icons-container">
-                        <img src="images/paypal.png" alt="Tarjeta de crédito" class="mr-2 pay-icon" />
-                      </div>
-                    </button>
-                  </h2>
-                  <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                      <input type="password" id="email" class="form-control m-2" aria-describedby="passwordHelpBlock"
-                        placeholder="Correo electrónico" />
-                      <input type="password" id="passwordPaypal" class="form-control m-2"
-                        aria-describedby="passwordHelpBlock" placeholder="Contraseña" />
-                      <button @click="generatePayment" type="button m-2" class="btn btn-info">
-                        Iniciar sesión en PayPal
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div class="accordion-item">
-                  <h2 class="accordion-header" id="headingTwo">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                      PSE
-                      <div class="icons-container">
-                        <img src="images/pse.png" alt="Tarjeta de crédito" class="mr-2 pay-icon" />
-                      </div>
-                    </button>
-                  </h2>
-                  <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                      <input type="text" id="namePSE" class="form-control m-2" aria-describedby="passwordHelpBlock"
-                        placeholder="Nombre completo" />
-                      <input type="text" id="document" class="form-control m-2" aria-describedby="passwordHelpBlock"
-                        placeholder="Documento" />
-
-                      <button @click="generatePayment" type="button m-2" class="btn btn-info">
-                        Ir a PSE
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div class="accordion-item">
-                  <h2 class="accordion-header" id="headingFour">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                      Efecty
-                      <div class="icons-container">
-                        <img src="images/efecty.png" alt="Tarjeta de crédito" class="mr-2 pay-icon efecty" />
-                      </div>
-                    </button>
-                  </h2>
-                  <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                      <input type="text" id="convenio" class="form-control m-2" aria-describedby="passwordHelpBlock"
-                        placeholder="Convenio 549 213" disabled />
-
-                      <button @click="generatePayment" type="button m-2" class="btn btn-info">
-                        Generar referencia
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                Cancelar
-              </button>
-            </div>
+              </tbody>
+            </table>
           </div>
         </div>
-      </div>
-
-      <!-- BUY COIN PACKS -->
-      <div class="modal fade" id="coinsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-          <div class="modal-content " style="background-color: #3C3E44;">
-            <div class="modal-header">
-              <h1 class="modal-title text-white text-center" id="exampleModalLabel">
-                Comprar MortyCoins!
-              </h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-
-              <div class="container-fluid">
-                <div class="row justify-content-around">
-                  <div class="col-lg-3 col-md-6 col-sm-8 rounded text-center mb-2 " v-for="pk of packets">
-                    <div class="card w-100 h-100">
-                      <img v-bind:src="pk.img" alt="" class="card-img-top">
-                      <div class="card-body d-flex flex-column">
-                        <h5 class="card-title mt-auto" style="font-weight: bold;">{{pk.name}}
-                        </h5>
-                        <h5 class="card-title mt-auto" style="font-weight: bold;">{{pk.amount}}
-                        </h5>
-                        <h5 class="card-title mt-auto" style="font-weight: bold;"><button
-                            class="btn btn-primary mt-auto"><a data-bs-toggle="modal" data-bs-target="#exampleModal"
-                              class="dropdown-item" href="#" @click="payPacket(pk)">{{pk.price}}</a></button></h5>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+        <!-- BUY CREDITS -->
+        <div
+          class="modal fade"
+          id="exampleModal"
+          ref="payModal"
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                  Pagar MortyCoins!
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
               </div>
-
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!--  auctionModal-->
-      <div class="modal fade" id="auctionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered ">
-          <div class="modal-content" style="background-color: #3C3E44;">
-            <div class="modal-header">
-              <h1 class="modal-title text-white text-center" id="exampleModalLabel">
-                Subasta
-              </h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-
-              <div class="container">
-                <div class="row">
-                  <div class="col rounded d-flex flex-column align-items-center  mb-2 p-1">
-
-                    <div class="card card-style">
-                      <div class="row no-gutters">
-                        <div class="col-sm-5">
-                          <img class="card-img" v-bind:src="card.image" alt="Card" />
+              <div class="modal-body">
+                <div class="accordion" id="accordionExample">
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                      <button
+                        class="accordion-button"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseOne"
+                        aria-expanded="true"
+                        aria-controls="collapseOne"
+                      >
+                        Tarjeta de crédito
+                        <div class="icons-container">
+                          <img
+                            src="images/visa.png"
+                            alt="Tarjeta de crédito"
+                            class="mr-2 pay-icon"
+                          />
+                          <img
+                            src="images/mastercard.png"
+                            alt="Tarjeta de crédito"
+                            class="mr-2 pay-icon"
+                          />
+                          <img
+                            src="images/amex.png"
+                            alt="Tarjeta de crédito"
+                            class="mr-2 pay-icon"
+                          />
                         </div>
-                        <div class="col-sm-7">
-                          <div class="card-body">
-                            <h3 class="card-title text"> {{card.name}} </h3>
-                            <p class="card-text text">
-                              {{card.status}} - {{card.species}}
-                            </p>
-                            <h5 class="card-title text">$ {{card.price}} </h5>
+                      </button>
+                    </h2>
+                    <div
+                      id="collapseOne"
+                      class="accordion-collapse collapse show"
+                      aria-labelledby="headingOne"
+                      data-bs-parent="#accordionExample"
+                    >
+                      <div class="accordion-body">
+                        <input
+                          type="password"
+                          id="cardNumber"
+                          class="form-control m-2"
+                          aria-describedby="passwordHelpBlock"
+                          placeholder="Número de tarjeta"
+                        />
+                        <input
+                          type="password"
+                          id="titularName"
+                          class="form-control m-2"
+                          aria-describedby="passwordHelpBlock"
+                          placeholder="Nombre del titular"
+                        />
+                        <input
+                          type="password"
+                          id="expirationDate"
+                          class="form-control m-2"
+                          aria-describedby="passwordHelpBlock"
+                          placeholder="Fecha de vencimiento (MM/AA)"
+                        />
+                        <input
+                          type="password"
+                          id="securityCode"
+                          class="form-control m-2"
+                          aria-describedby="passwordHelpBlock"
+                          placeholder="Código de seguridad"
+                        />
+
+                        <button
+                          @click="generatePayment"
+                          type="button m-2"
+                          class="btn btn-info"
+                          data-bs-dismiss="modal"
+                        >
+                          Realizar pago
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingThree">
+                      <button
+                        class="accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseThree"
+                        aria-expanded="false"
+                        aria-controls="collapseThree"
+                      >
+                        PayPal
+                        <div class="icons-container">
+                          <img
+                            src="images/paypal.png"
+                            alt="Tarjeta de crédito"
+                            class="mr-2 pay-icon"
+                          />
+                        </div>
+                      </button>
+                    </h2>
+                    <div
+                      id="collapseThree"
+                      class="accordion-collapse collapse"
+                      aria-labelledby="headingThree"
+                      data-bs-parent="#accordionExample"
+                    >
+                      <div class="accordion-body">
+                        <input
+                          type="password"
+                          id="email"
+                          class="form-control m-2"
+                          aria-describedby="passwordHelpBlock"
+                          placeholder="Correo electrónico"
+                        />
+                        <input
+                          type="password"
+                          id="passwordPaypal"
+                          class="form-control m-2"
+                          aria-describedby="passwordHelpBlock"
+                          placeholder="Contraseña"
+                        />
+                        <button
+                          @click="generatePayment"
+                          type="button m-2"
+                          class="btn btn-info"
+                          data-bs-dismiss="modal"
+                        >
+                          Iniciar sesión en PayPal
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                      <button
+                        class="accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseTwo"
+                        aria-expanded="false"
+                        aria-controls="collapseTwo"
+                      >
+                        PSE
+                        <div class="icons-container">
+                          <img
+                            src="images/pse.png"
+                            alt="Tarjeta de crédito"
+                            class="mr-2 pay-icon"
+                          />
+                        </div>
+                      </button>
+                    </h2>
+                    <div
+                      id="collapseTwo"
+                      class="accordion-collapse collapse"
+                      aria-labelledby="headingTwo"
+                      data-bs-parent="#accordionExample"
+                    >
+                      <div class="accordion-body">
+                        <input
+                          type="text"
+                          id="namePSE"
+                          class="form-control m-2"
+                          aria-describedby="passwordHelpBlock"
+                          placeholder="Nombre completo"
+                        />
+                        <input
+                          type="text"
+                          id="document"
+                          class="form-control m-2"
+                          aria-describedby="passwordHelpBlock"
+                          placeholder="Documento"
+                        />
+
+                        <button
+                          @click="generatePayment"
+                          type="button m-2"
+                          class="btn btn-info"
+                          data-bs-dismiss="modal"
+                        >
+                          Ir a PSE
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingFour">
+                      <button
+                        class="accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseFour"
+                        aria-expanded="false"
+                        aria-controls="collapseFour"
+                      >
+                        Efecty
+                        <div class="icons-container">
+                          <img
+                            src="images/efecty.png"
+                            alt="Tarjeta de crédito"
+                            class="mr-2 pay-icon efecty"
+                          />
+                        </div>
+                      </button>
+                    </h2>
+                    <div
+                      id="collapseFour"
+                      class="accordion-collapse collapse"
+                      aria-labelledby="headingFour"
+                      data-bs-parent="#accordionExample"
+                    >
+                      <div class="accordion-body">
+                        <input
+                          type="text"
+                          id="convenio"
+                          class="form-control m-2"
+                          aria-describedby="passwordHelpBlock"
+                          placeholder="Convenio 549 213"
+                          disabled
+                        />
+
+                        <button
+                          @click="generatePayment"
+                          type="button m-2"
+                          class="btn btn-info"
+                          data-bs-dismiss="modal"
+                        >
+                          Generar referencia
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BUY COIN PACKS -->
+        <div
+          class="modal fade"
+          id="coinsModal"
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content" style="background-color: #3c3e44">
+              <div class="modal-header">
+                <h1
+                  class="modal-title text-white text-center"
+                  id="exampleModalLabel"
+                >
+                  Comprar MortyCoins!
+                </h1>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="container-fluid">
+                  <div class="row justify-content-around">
+                    <div
+                      class="col-lg-3 col-md-6 col-sm-8 rounded text-center mb-2"
+                      v-for="pk of packets"
+                    >
+                      <div class="card w-100 h-100">
+                        <img v-bind:src="pk.img" alt="" class="card-img-top" />
+                        <div class="card-body d-flex flex-column">
+                          <h5
+                            class="card-title mt-auto"
+                            style="font-weight: bold"
+                          >
+                            {{ pk.name }}
+                          </h5>
+                          <h5
+                            class="card-title mt-auto"
+                            style="font-weight: bold"
+                          >
+                            {{ pk.amount }}
+                          </h5>
+                          <h5
+                            class="card-title mt-auto"
+                            style="font-weight: bold"
+                          >
+                            <button class="btn btn-primary mt-auto">
+                              <a
+                                data-bs-toggle="modal"
+                                data-bs-target="#exampleModal"
+                                class="dropdown-item"
+                                href="#"
+                                @click="payPacket(pk)"
+                                >{{ pk.price }}</a
+                              >
+                            </button>
+                          </h5>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--  auctionModal-->
+        <div
+          class="modal fade"
+          id="auctionModal"
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background-color: #3c3e44">
+              <div class="modal-header">
+                <h1
+                  class="modal-title text-white text-center"
+                  id="exampleModalLabel"
+                >
+                  Subasta
+                </h1>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="container">
+                  <div class="row">
+                    <div
+                      class="col rounded d-flex flex-column align-items-center mb-2 p-1"
+                    >
+                      <div class="card card-style">
+                        <div class="row no-gutters">
+                          <div class="col-sm-5">
+                            <img
+                              class="card-img"
+                              v-bind:src="card.image"
+                              alt="Card"
+                            />
+                          </div>
+                          <div class="col-sm-7">
+                            <div class="card-body">
+                              <h3 class="card-title text">{{ card.name }}</h3>
+                              <p class="card-text text">
+                                {{ card.status }} - {{ card.species }}
+                              </p>
+                              <h5 class="card-title text">
+                                $ {{ card.price }}
+                              </h5>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
 
-                    <input type="number" v-model="valueAuction" placeholder="0" class="rounded m-2" style="width: 60%;">
-                    <button class="btn btn-primary mt-auto rounde" @click="auction(card)"
-                      style="width: 60%;">Pujar</button>
+                      <input
+                        type="number"
+                        v-model="valueAuction"
+                        placeholder="0"
+                        class="rounded m-2"
+                        style="width: 60%"
+                      />
+                      <button
+                        class="btn btn-primary mt-auto rounde"
+                        @click="auction(card)"
+                        style="width: 60%"
+                      >
+                        Pujar
+                      </button>
 
-                    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-                      <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
-                        <path
-                          d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
-                      </symbol>
-                      <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
-                        <path
-                          d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
-                      </symbol>
-                      <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
-                        <path
-                          d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
-                      </symbol>
-                    </svg>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        style="display: none"
+                      >
+                        <symbol
+                          id="check-circle-fill"
+                          fill="currentColor"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+                          />
+                        </symbol>
+                        <symbol
+                          id="info-fill"
+                          fill="currentColor"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"
+                          />
+                        </symbol>
+                        <symbol
+                          id="exclamation-triangle-fill"
+                          fill="currentColor"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"
+                          />
+                        </symbol>
+                      </svg>
 
-                    <div class="mt-4 w-80" v-if="alert">
-                      <div class="alert alert-warning d-flex justify-content-between" role="alert">
+                      <div class="mt-4 w-80" v-if="alert">
+                        <div
+                          class="alert alert-warning d-flex justify-content-between"
+                          role="alert"
+                        >
+                          <svg
+                            class="bi flex-shrink-0 me-2"
+                            width="24"
+                            height="24"
+                            role="img"
+                            aria-label="Success:"
+                          >
+                            <use xlink:href="#exclamation-triangle-fill" />
+                          </svg>
 
-                        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
-                          <use xlink:href="#exclamation-triangle-fill" />
-                        </svg>
+                          <div
+                            class="d-flex flex-column align-items-center m-2"
+                          >
+                            <strong v-text="message"></strong>
 
-                        <div class="d-flex flex-column align-items-center m-2">
-                          <strong v-text="message"></strong>
+                            <button class="btn btn-primary" v-if="noCoins">
+                              <a
+                                data-bs-toggle="modal"
+                                data-bs-target="#coinsModal"
+                                class="dropdown-item"
+                                href="#"
+                                >comprar</a
+                              >
+                            </button>
+                          </div>
 
-                          <button class="btn btn-primary" v-if="noCoins"> <a data-bs-toggle="modal"
-                              data-bs-target="#coinsModal" class="dropdown-item" href="#">comprar</a></button>
-
+                          <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="danger"
+                            @click="closeAlert"
+                          ></button>
                         </div>
+                      </div>
 
-                        <button type="button" class="btn-close" data-bs-dismiss="danger" @click="closeAlert"></button>
+                      <div class="mt-4 w-80" v-if="buyedCard">
+                        <div
+                          class="alert alert-success d-flex justify-content-between"
+                          role="alert"
+                        >
+                          <svg
+                            class="bi flex-shrink-0 me-2"
+                            width="24"
+                            height="24"
+                            role="img"
+                            aria-label="Success:"
+                          >
+                            <use xlink:href="#check-circle-fill" />
+                          </svg>
+
+                          <div
+                            class="d-flex flex-column align-items-center m-2"
+                          >
+                            <strong v-text="message"></strong>
+                          </div>
+
+                          <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="success"
+                            @click="closeAlert"
+                          ></button>
+                        </div>
                       </div>
                     </div>
-
-                    <div class="mt-4 w-80" v-if="buyedCard">
-                      <div class="alert alert-success d-flex justify-content-between" role="alert">
-
-                        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
-                          <use xlink:href="#check-circle-fill" />
-                        </svg>
-
-                        <div class="d-flex flex-column align-items-center m-2">
-                          <strong v-text="message"></strong>
-                        </div>
-
-                        <button type="button" class="btn-close" data-bs-dismiss="success" @click="closeAlert"></button>
-                      </div>
-                    </div>
-
                   </div>
                 </div>
               </div>
-
             </div>
-
           </div>
         </div>
-      </div>
 
-      <!-- viewMyCards -->
-      <div class="row" v-if="isMyCards">
-        <div class="dropdown">
-          <button class="btn btn-info mt-3 float-end" type="button" @click="isLandPage=true; isMyCards=false"
-            aria-expanded="false">
-            Volver
-          </button>
-        </div>
-        <div class="image-container">
-          <img class="buy-image" src="images/buy.png" alt="logo" />
-        </div>
-        <h1 class="text-title">Mis NFTs</h1>
-        <h5 class="text-title" v-if="norepeatedCards == ''">¿Que esperas? Ve y compra tus NFTs!</h5>
-        <div class="col-md-6" v-for="myCard in norepeatedCards">
-          <div class="card card-style" style="width: 96%">
-            <div class="row no-gutters">
-              <div class="col-sm-5">
-                <img class="card-img" :src="myCard.image" alt="Card" />
-              </div>
-              <div class="col-sm-7">
-                <div class="card-body">
-                  <h3 class="card-title text">{{ myCard.name }}</h3>
-                  <p class="card-text text">
-                    {{ myCard.status }} - {{ myCard.species }}
-                  </p>
-                  <h5 class="card-title text">Tienes : {{myCard.amount}}</h5>
-                  <h5 class="card-title text">${{ myCard.price }}</h5>
+        <!-- viewMyCards -->
+        <div class="row" v-if="isMyCards">
+          <div class="dropdown">
+            <button
+              class="btn btn-info mt-3 float-end"
+              type="button"
+              @click="isLandPage=true; isMyCards=false"
+              aria-expanded="false"
+            >
+              Volver
+            </button>
+          </div>
+          <div class="image-container">
+            <img class="buy-image" src="images/buy.png" alt="logo" />
+          </div>
+          <h1 class="text-title">Mis NFTs</h1>
+          <h5 class="text-title" v-if="norepeatedCards == ''">
+            ¿Que esperas? Ve y compra tus NFTs!
+          </h5>
+          <div class="col-md-6" v-for="myCard in norepeatedCards">
+            <div class="card card-style" style="width: 96%">
+              <div class="row no-gutters">
+                <div class="col-sm-5">
+                  <img class="card-img" :src="myCard.image" alt="Card" />
+                </div>
+                <div class="col-sm-7">
+                  <div class="card-body">
+                    <h3 class="card-title text">{{ myCard.name }}</h3>
+                    <p class="card-text text">
+                      {{ myCard.status }} - {{ myCard.species }}
+                    </p>
+                    <h5 class="card-title text">
+                      Tienes : {{ myCard.amount }}
+                    </h5>
+                    <h5 class="card-title text">${{ myCard.price }}</h5>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-
-
       </div>
-
-
     </div>
-  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-    crossorigin="anonymous"></script>
-  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="./index.js"></script>
-</body>
-
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+      crossorigin="anonymous"
+    ></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./index.js"></script>
+  </body>
 </html>
